@@ -63,11 +63,12 @@ async function getUserByProviderProfile(
   profile: Profile,
   provider: 'github' | 'google',
 ) {
-  const email = profile.emails && profile.emails[0].value
+  let email = profile.emails && profile.emails[0].value
   const avatar = profile.photos && profile.photos[0].value
 
   if (!email) {
-    throw new Error(`No email`)
+    // Some users might not have a public email
+    email = `${provider}_${profile.id}@mail-holder.blogify.dev`
   }
 
   if (!avatar) {
