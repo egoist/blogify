@@ -71,10 +71,6 @@ async function getUserByProviderProfile(
     email = `${provider}_${profile.id}@mail-holder.blogify.dev`
   }
 
-  if (!avatar) {
-    throw new Error(`No avatar`)
-  }
-
   const providerKey = `${provider}UserId`
 
   // Find one by provider user id
