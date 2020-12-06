@@ -9,7 +9,6 @@ export const postService = {
     Array<{
       title: string
       slug: string
-      readableSlug: string
       createdAt: string
       blogSlug: string
       blogName: string
@@ -22,7 +21,6 @@ export const postService = {
       score: number
       title: string
       slug: string
-      readable_slug: string
       created_at: Date
       likes_count: number
     }> = await prisma.$queryRaw`
@@ -55,7 +53,6 @@ export const postService = {
       return {
         title: post.title,
         slug: post.slug,
-        readableSlug: post.readable_slug,
         createdAt: dayjs(post.created_at).format(),
         blogSlug: blog.slug,
         blogName: blog.name,

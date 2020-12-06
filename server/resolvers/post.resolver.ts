@@ -53,9 +53,6 @@ class Post {
   slug: String
 
   @Field()
-  readableSlug: String
-
-  @Field()
   content: String
 
   @Field()
