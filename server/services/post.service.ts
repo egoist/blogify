@@ -26,8 +26,8 @@ export const postService = {
     }> = await prisma.$queryRaw`
     select *, (likes_count / EXTRACT(EPOCH FROM current_timestamp - created_at)/3600 ^ 1.8) as score from "posts"
     where created_at > ${dayjs().subtract(days, 'day').toDate()}
-    order by score
-    limit 30
+    order by score desc
+    limit 30;
     `
     const blogs: {
       [blog_id: number]: Blog
