@@ -20,6 +20,8 @@ type PageProps = {
     createdAt: string
     slug: string
     likesCount: number
+    cover: string | null
+    coverAlt: string | null
     tags: Array<{
       id: number
       name: string
@@ -92,10 +94,15 @@ const Post: React.FC<PageProps> = ({ user, blog, post, isLiked }) => {
             </div>
           </div>
         </div>
-        <div
-          className="mt-8 text-gray-200 rich-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        ></div>
+        <div className="mt-8 text-gray-200">
+          {post.cover && (
+            <img className="post-cover" src={post.cover} alt="cover image" />
+          )}
+          <div
+            className="rich-content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          ></div>
+        </div>
         <div className="mt-10">
           <LikeButton
             count={post.likesCount}

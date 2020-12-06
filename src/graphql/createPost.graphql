@@ -4,6 +4,7 @@ mutation createPost(
   $slug: String!
   $tags: String!
   $blogSlug: String!
+  $cover: String!
 ) {
   createPost(
     title: $title
@@ -11,6 +12,7 @@ mutation createPost(
     slug: $slug
     tags: $tags
     blogSlug: $blogSlug
+    cover: $cover
   ) {
     id
     slug

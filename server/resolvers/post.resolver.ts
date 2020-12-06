@@ -39,6 +39,9 @@ class CreatePostArgs {
 
   @Field()
   tags: string
+
+  @Field()
+  cover: string
 }
 
 @ObjectType()
@@ -81,6 +84,9 @@ class UpdatePostArgs {
 
   @Field()
   slug: string
+
+  @Field()
+  cover: string
 }
 
 @ArgsType()
@@ -131,13 +137,11 @@ const parseContent = async ({
       slug += `-${randomSlugSuffix()}`
     }
   }
-  const info = validateMarkdown(content)
+  validateMarkdown(content)
   return {
     title,
     slug,
     content,
-    cover: info.cover,
-    coverAlt: info.coverAlt,
   }
 }
 
@@ -221,8 +225,7 @@ export class PostResolver {
         title: parsed.title,
         content: parsed.content,
         slug: parsed.slug,
-        cover: parsed.cover,
-        coverAlt: parsed.coverAlt,
+        cover: args.cover,
         tags: await populateTags(blog.id, args.tags),
       },
     })
@@ -272,8 +275,7 @@ export class PostResolver {
         title: parsed.title,
         content: parsed.content,
         slug: parsed.slug,
-        cover: parsed.cover,
-        coverAlt: parsed.coverAlt,
+        cover: args.cover,
         tags: await populateTags(post.blogId, args.tags),
       },
     })

@@ -4,6 +4,7 @@ mutation updatePost(
   $content: String!
   $slug: String!
   $tags: String!
+  $cover: String!
 ) {
   updatePost(
     id: $id
@@ -11,6 +12,7 @@ mutation updatePost(
     content: $content
     tags: $tags
     slug: $slug
+    cover: $cover
   ) {
     id
     slug

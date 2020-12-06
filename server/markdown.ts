@@ -19,19 +19,9 @@ export const validateMarkdown = (content: string) => {
   const md = new Markdown({
     html: false,
   })
-  const env: { cover: string | null; coverAlt: string | null } = {
-    cover: '',
-    coverAlt: '',
-  }
+  const env = {}
 
-  const tokens = md.parse(content, env)
-
-  // Extract cover image and alt text
-  const imageToken = tokens[1] && tokens[1].children && tokens[1].children[0]
-  if (imageToken) {
-    env.cover = imageToken.attrGet('src')
-    env.coverAlt = imageToken.attrGet('alt')
-  }
+  md.parse(content, env)
 
   return env
 }

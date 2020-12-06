@@ -19,6 +19,10 @@ type PageProps = {
     slug: string
     cover: string | null
     coverAlt: string | null
+    tags: Array<{
+      name: string
+      slug: string
+    }>
   }>
   hasMore: boolean
 }

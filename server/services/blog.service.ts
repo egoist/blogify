@@ -51,6 +51,14 @@ export const blogService = {
       orderBy: {
         createdAt: 'desc',
       },
+      include: {
+        tags: {
+          select: {
+            name: true,
+            slug: true,
+          },
+        },
+      },
     })
 
     return {
@@ -61,6 +69,7 @@ export const blogService = {
           slug: post.slug,
           cover: post.cover,
           coverAlt: post.coverAlt,
+          tags: post.tags,
         }
       }),
       hasMore: posts.length > 10,

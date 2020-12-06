@@ -11,6 +11,7 @@ type PageProps = {
   initialContent: string
   initialTags: string
   initialSlug: string
+  initialCover: string | null
   blog: BlogInfo
   postId: number
 }
@@ -44,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       initialContent: post.content,
       initialTags: post.tags.map((tag: any) => tag.name).join(', '),
       initialSlug: post.slug,
-
+      initialCover: post.cover,
       blog: {
         name: blog.name,
         slug: blog.slug,

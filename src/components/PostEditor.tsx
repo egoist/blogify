@@ -16,6 +16,7 @@ export const PostEditor: React.FC<{
   initialContent: string
   initialTags?: string
   initialSlug?: string
+  initialCover?: string
   postId?: number
   blog: BlogInfo
 }> = ({
@@ -24,6 +25,7 @@ export const PostEditor: React.FC<{
   initialContent,
   initialTags,
   initialSlug,
+  initialCover,
   blog,
   postId,
 }) => {
@@ -62,6 +64,7 @@ export const PostEditor: React.FC<{
       content: initialContent,
       tags: initialTags || '',
       slug: initialSlug || '',
+      cover: initialCover || '',
     },
     validationSchema: Yup.object().shape({
       title: Yup.string().required(),
@@ -88,6 +91,7 @@ export const PostEditor: React.FC<{
           content: values.content,
           tags: values.tags,
           slug: values.slug,
+          cover: values.cover,
         })
         if (data) {
           router.push(`/${router.query.blog}/${data.updatePost.slug}`)
@@ -99,6 +103,7 @@ export const PostEditor: React.FC<{
           content: values.content,
           tags: values.tags,
           slug: values.slug,
+          cover: values.cover,
         })
         if (data) {
           router.push(`/${router.query.blog}/${data.createPost.slug}`)
@@ -134,8 +139,8 @@ export const PostEditor: React.FC<{
             <div className="form-error">{form.errors.content}</div>
           )}
         </div>
-        <div className="mt-3">
-          <label className="text-sm mb-1 font-bold">Permalink</label>
+        <div className="mt-5">
+          <label className="block text-sm mb-1 font-bold">Permalink</label>
           <div className="text-xs mb-3 text-gray-500">
             We'll generate the permalink for you if you leave it blank
           </div>
@@ -154,7 +159,23 @@ export const PostEditor: React.FC<{
             <div className="form-error">{form.errors.slug}</div>
           )}
         </div>
-        <div className="mt-3">
+        <div className="mt-5">
+          <label className="block text-sm mb-1 font-bold">Cover image</label>
+          <div>
+            <input
+              name="cover"
+              type="url"
+              className="input md:w-6/12"
+              value={form.values.cover}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+            />
+          </div>
+          {form.errors.cover && form.touched.cover && (
+            <div className="form-error">{form.errors.cover}</div>
+          )}
+        </div>
+        <div className="mt-5">
           <label className="text-sm mb-1 font-bold">Tags</label>
           <div className="text-xs mb-3 text-gray-500">
             Allows up to 10 tags, separated by comma
