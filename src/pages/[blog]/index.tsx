@@ -70,7 +70,7 @@ const Blog: React.FC<PageProps> = ({
     <BlogLayout blog={blog}>
       {introduction && (
         <div
-          className={clsx(`rich-content`, !user && `mb-12`)}
+          className={clsx(`rich-content`, !canEdit && `mb-12`)}
           dangerouslySetInnerHTML={{ __html: introduction }}
         ></div>
       )}
