@@ -61,6 +61,7 @@ const EditPost: React.FC<PageProps> = ({
   initialContent,
   initialTags,
   initialSlug,
+  initialCover,
   blog,
   postId,
 }) => {
@@ -71,6 +72,7 @@ const EditPost: React.FC<PageProps> = ({
       initialContent={initialContent}
       initialTags={initialTags}
       initialSlug={initialSlug}
+      initialCover={initialCover}
       blog={blog}
       postId={postId}
     />

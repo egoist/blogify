@@ -1,6 +1,7 @@
 .post-cover {
   @apply mx-auto;
   @apply mb-8;
+  max-width: 60%;
 }
 
 .rich-content {

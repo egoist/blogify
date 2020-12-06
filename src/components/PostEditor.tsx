@@ -16,7 +16,7 @@ export const PostEditor: React.FC<{
   initialContent: string
   initialTags?: string
   initialSlug?: string
-  initialCover?: string
+  initialCover?: string | null
   postId?: number
   blog: BlogInfo
 }> = ({
