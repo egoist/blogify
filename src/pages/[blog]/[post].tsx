@@ -13,6 +13,7 @@ type PageProps = {
   user: UserSession | null
   blog: BlogInfo
   isLiked: boolean | null
+  canEdit: boolean
   post: {
     id: number
     title: string
@@ -44,6 +45,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     return { notFound: true }
   }
 
+  const canEdit = post.blog.userId === user?.id
   const isLiked =
     (user && (await postService.isLikedBy(post.id, user.id))) || null
   const { html } = renderMarkdown(post.content)
@@ -57,11 +59,12 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         ...post,
         content: html,
       },
+      canEdit,
     },
   }
 }
 
-const Post: React.FC<PageProps> = ({ user, blog, post, isLiked }) => {
+const Post: React.FC<PageProps> = ({ user, blog, post, isLiked, canEdit }) => {
   return (
     <>
       <BlogLayout blog={blog} title={post.title}>
@@ -70,7 +73,7 @@ const Post: React.FC<PageProps> = ({ user, blog, post, isLiked }) => {
           <div className="mt-5 text-sm flex justify-between items-center">
             <div className="space-x-3">
               <span>{dayjs(post.createdAt).format('MMM DD, YYYY')}</span>
-              {user && (
+              {canEdit && (
                 <>
                   <span>
                     <Link href={`/${blog.slug}/${post.slug}/edit`}>

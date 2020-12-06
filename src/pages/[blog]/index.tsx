@@ -13,6 +13,7 @@ type PageProps = {
   user: UserSession | null
   blog: BlogInfo
   introduction: string
+  canEdit: boolean
   posts: Array<{
     title: string
     date: string
@@ -39,6 +40,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   if (!blog) {
     return { notFound: true }
   }
+  const canEdit = blog.userId === user?.id
   const { posts, hasMore } = await blogService.getRecentPosts(blog.id)
   const introduction = renderMarkdown(blog.introduction)
   return {
@@ -51,6 +53,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       introduction: introduction.html,
       posts,
       hasMore,
+      canEdit,
     },
   }
 }
@@ -61,6 +64,7 @@ const Blog: React.FC<PageProps> = ({
   introduction,
   posts,
   hasMore,
+  canEdit,
 }) => {
   return (
     <BlogLayout blog={blog}>
@@ -70,7 +74,7 @@ const Blog: React.FC<PageProps> = ({
           dangerouslySetInnerHTML={{ __html: introduction }}
         ></div>
       )}
-      {user && (
+      {canEdit && (
         <div className="mt-3 mb-12 text-sm">
           <Link href={`/${blog.slug}/settings`}>
             <a className="link inline-flex items-center space-x-1">

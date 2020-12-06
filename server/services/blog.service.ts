@@ -110,6 +110,11 @@ export const blogService = {
       },
       include: {
         tags: true,
+        blog: {
+          select: {
+            userId: true,
+          },
+        },
       },
     })
     return (
