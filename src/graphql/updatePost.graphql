@@ -1,0 +1,18 @@
+mutation updatePost(
+  $id: Int!
+  $title: String!
+  $content: String!
+  $slug: String!
+  $tags: String!
+) {
+  updatePost(
+    id: $id
+    title: $title
+    content: $content
+    tags: $tags
+    slug: $slug
+  ) {
+    id
+    slug
+  }
+}

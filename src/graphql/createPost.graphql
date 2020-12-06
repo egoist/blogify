@@ -1,0 +1,18 @@
+mutation createPost(
+  $title: String!
+  $content: String!
+  $slug: String!
+  $tags: String!
+  $blogSlug: String!
+) {
+  createPost(
+    title: $title
+    content: $content
+    slug: $slug
+    tags: $tags
+    blogSlug: $blogSlug
+  ) {
+    id
+    slug
+  }
+}

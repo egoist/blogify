@@ -1,0 +1,113 @@
+:root {
+  --button-border-color: #444;
+  --button-border-hover-color: rgb(104, 104, 104);
+
+  --link-color: #8cc2dd;
+  --link-visited-color: #8b6fcb;
+
+  --input-bg: #272822;
+
+  --accent-color: theme('colors.gray.50');
+
+  --code-block-bg: #191c20;
+
+  --border-color: #444;
+}
+
+body {
+  background-color: #222;
+  color: #aaa;
+}
+
+input {
+  border-radius: 0;
+}
+
+.container {
+  @apply max-w-3xl mx-auto px-5;
+}
+
+.link {
+  color: var(--link-color);
+}
+
+.link.hint-visited:visited {
+  color: var(--link-visited-color);
+}
+
+.button {
+  background-color: var(--input-bg);
+  border-color: var(--button-border-color);
+  @apply border px-2 text-sm h-7 inline-flex items-center;
+}
+
+.button:hover {
+  border-color: var(--button-border-hover-color);
+}
+
+.button.is-large {
+  @apply px-3;
+  @apply h-9;
+  @apply text-base;
+}
+
+.input,
+.input-addon {
+  background-color: var(--input-bg);
+  border-color: var(--border-color);
+  @apply text-base;
+  @apply border px-3 text-sm h-10;
+}
+
+.input:focus {
+  @apply outline-none;
+}
+
+.input:focus {
+  border-color: var(--button-border-hover-color);
+}
+
+.input-addon {
+  border-right: none;
+  @apply inline-flex;
+  @apply items-center;
+  @apply justify-center;
+}
+
+/** Button variants */
+.button.is-primary {
+  color: white;
+  @apply bg-blue-500;
+  @apply border-blue-500;
+}
+
+.textarea {
+  @apply h-auto;
+  @apply resize-none;
+  @apply py-3;
+  @apply px-3;
+}
+
+.main {
+  @apply my-10;
+}
+
+.label {
+  @apply flex;
+  @apply mb-2;
+  @apply text-sm;
+}
+
+.form-error {
+  @apply text-red-500;
+  @apply mt-2;
+  @apply text-xs;
+}
+
+.page-title {
+  @apply text-2xl;
+  @apply border-b border-border;
+  @apply pb-4;
+  @apply mb-8;
+  @apply text-gray-100;
+}

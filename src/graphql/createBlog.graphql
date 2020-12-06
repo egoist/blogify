@@ -1,0 +1,6 @@
+mutation createBlog($name: String!, $slug: String!) {
+  createBlog(name: $name, slug: $slug) {
+    id
+    slug
+  }
+}

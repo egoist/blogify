@@ -1,0 +1,10 @@
+mutation updateBlog(
+  $id: Int!
+  $name: String!
+  $slug: String!
+  $introduction: String!
+) {
+  updateBlog(id: $id, name: $name, slug: $slug, introduction: $introduction) {
+    id
+  }
+}
