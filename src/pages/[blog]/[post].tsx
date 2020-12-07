@@ -15,6 +15,7 @@ type PageProps = {
   blog: BlogInfo
   isLiked: boolean | null
   canEdit: boolean
+  excerpt: string
   post: {
     id: number
     title: string
@@ -49,8 +50,9 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   const canEdit = post.blog.userId === user?.id
   const isLiked =
     (user && (await postService.isLikedBy(post.id, user.id))) || null
-  const { html } = renderMarkdown(post.content)
-
+  const { html, env } = renderMarkdown(post.content)
+  // Strip HTML tags in excerpt
+  const excerpt = env.excerpt.trim().replace(/(<([^>]+)>)/gi, '')
   return {
     props: {
       user,
@@ -60,16 +62,26 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
         ...post,
         content: html,
       },
+      excerpt,
       canEdit,
     },
   }
 }
 
-const Post: React.FC<PageProps> = ({ user, blog, post, isLiked, canEdit }) => {
+const Post: React.FC<PageProps> = ({
+  user,
+  blog,
+  post,
+  isLiked,
+  canEdit,
+  excerpt,
+}) => {
   return (
     <>
       <Head>
         <meta property="og:title" content={post.title} />
+        <meta property="og:description" content={excerpt} />
+        <meta name="description" content={excerpt} />
         <meta name="twitter:card" content="summary" />
       </Head>
       <BlogLayout blog={blog} title={post.title}>

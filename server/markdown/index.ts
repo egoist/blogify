@@ -1,6 +1,7 @@
 import Markdown from 'markdown-it'
 import Prism from 'prismjs'
 import loadLanguages from 'prismjs/components/index'
+import { excerptPlugin } from './excerpt-plugin'
 
 // This is used to render markdown to html to display in browser
 export const renderMarkdown = (content: string) => {
@@ -14,7 +15,9 @@ export const renderMarkdown = (content: string) => {
     },
   })
 
-  const env = {}
+  md.use(excerptPlugin)
+
+  const env: { excerpt: string } = { excerpt: '' }
   const html = md.render(content, env)
   return {
     html,
