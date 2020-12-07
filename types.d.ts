@@ -14,3 +14,5 @@ declare namespace NodeJS {
 type $TsFixMe = any
 
 declare module 'codemirror/mode/markdown/markdown'
+
+declare module 'prismjs/components/index'

@@ -1,9 +1,17 @@
 import Markdown from 'markdown-it'
+import Prism from 'prismjs'
+import loadLanguages from 'prismjs/components/index'
 
 // This is used to render markdown to html to display in browser
 export const renderMarkdown = (content: string) => {
   const md = new Markdown({
     html: false,
+    highlight: (code, lang) => {
+      lang = lang || 'markup'
+      loadLanguages([lang])
+      const grammer = Prism.languages[lang]
+      return Prism.highlight(code, grammer, lang)
+    },
   })
 
   const env = {}

@@ -1,5 +1,6 @@
 import '@snackbar/core/dist/snackbar.css'
 import '../css/nprogress.css'
+import '../css/prism.css'
 import '../css/codemirror.css'
 import '../css/codemirror-monokai.css'
 import '../css/tailwind.css'
