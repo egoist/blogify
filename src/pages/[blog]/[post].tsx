@@ -81,6 +81,7 @@ const Post: React.FC<PageProps> = ({
       <Head>
         <meta property="og:title" content={post.title} />
         <meta property="og:description" content={excerpt} />
+        {post.cover && <meta name="og:image" content={post.cover} />}
         <meta name="description" content={excerpt} />
         <meta name="twitter:card" content="summary" />
       </Head>
