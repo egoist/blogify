@@ -70,6 +70,7 @@ const Post: React.FC<PageProps> = ({ user, blog, post, isLiked, canEdit }) => {
     <>
       <Head>
         <meta property="og:title" content={post.title} />
+        <meta name="twitter:card" content="summary" />
       </Head>
       <BlogLayout blog={blog} title={post.title}>
         <div className="border-b border-border pb-3">
