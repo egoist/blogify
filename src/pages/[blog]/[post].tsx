@@ -8,6 +8,7 @@ import React from 'react'
 import Link from 'next/link'
 import { LikeButton } from '@/components/LikeButton'
 import { postService } from '@server/services/post.service'
+import Head from 'next/head'
 
 type PageProps = {
   user: UserSession | null
@@ -67,6 +68,9 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 const Post: React.FC<PageProps> = ({ user, blog, post, isLiked, canEdit }) => {
   return (
     <>
+      <Head>
+        <meta property="og:title" content={post.title} />
+      </Head>
       <BlogLayout blog={blog} title={post.title}>
         <div className="border-b border-border pb-3">
           <h2 className="text-gray-100 text-2xl">{post.title}</h2>
