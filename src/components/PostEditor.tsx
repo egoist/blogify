@@ -76,7 +76,7 @@ export const PostEditor: React.FC<{
       }),
       slug: Yup.string()
         .min(2)
-        .max(20)
+        .max(100)
         .test({
           name: 'allowed-chars',
           message: `Only letters, numbers, dash and underscore are allowed`,
