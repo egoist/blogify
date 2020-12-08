@@ -100,7 +100,7 @@ const Blog: React.FC<PageProps> = ({
       )}
       <h3 className="text-gray-100 flex justify-between">
         <span className="font-bold">Recent Posts</span>
-        {user && (
+        {canEdit && (
           <Link href={`/${blog.slug}/new-post`}>
             <a className="link text-sm inline-flex items-center space-x-1">
               <svg
