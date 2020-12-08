@@ -19,8 +19,8 @@ class MyDocument extends Document {
             <script
               async
               defer
-              data-website-id="9939e642-1de9-4fdc-9407-c1cbd39cda4a"
-              src="https://umami-stats.vercel.app/umami.js"
+              data-website-id="58941d97-5f7e-469b-b1f7-b99324743a9c"
+              src="https://analytics.blogify.dev/umami.js"
             ></script>
           )}
         </body>
