@@ -82,3 +82,10 @@
   @apply text-base;
   @apply font-bold;
 }
+
+.rich-content :not(pre) code {
+  padding: 3px 5px;
+  border-radius: 4px;
+  font-size: 13px;
+  background: black;
+}
