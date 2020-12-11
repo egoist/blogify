@@ -19,8 +19,10 @@ class MyDocument extends Document {
             <script
               async
               defer
-              data-website-id="58941d97-5f7e-469b-b1f7-b99324743a9c"
-              src="https://analytics.blogify.dev/umami.js"
+              src="https://static.cloudflareinsights.com/beacon.min.js"
+              data-cf-beacon={JSON.stringify({
+                token: '138ffaa6ec714968b95168f346bcec4c',
+              })}
             ></script>
           )}
         </body>
