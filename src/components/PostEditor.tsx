@@ -131,7 +131,8 @@ export const PostEditor: React.FC<{
           <textarea
             className="hidden"
             ref={textarea}
-            defaultValue={form.values.content}
+            value={form.values.content}
+            onChange={() => {}}
             placeholder="Write something brilliant.."
           ></textarea>
           {!editor && <div>Loading..</div>}
