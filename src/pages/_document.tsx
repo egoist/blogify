@@ -17,10 +17,9 @@ class MyDocument extends Document {
           <NextScript />
           {isProd && (
             <script
-              async
               defer
-              data-website-id="58941d97-5f7e-469b-b1f7-b99324743a9c"
-              src="https://analytics.blogify.dev/umami.js"
+              src="https://static.cloudflareinsights.com/beacon.min.js"
+              data-cf-beacon='{"token": "4a5d7c2e5531404abccfc7f3bed651fa"}'
             ></script>
           )}
         </body>
