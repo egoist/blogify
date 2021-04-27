@@ -10,10 +10,12 @@ const NotFound = () => {
       </Head>
       <div className="text-center flex items-center h-screen justify-center">
         <div>
-          <h1 className="text-gray-100 font-bold">404 - Not Found</h1>
-          <div className="mt-3">
+          <h1 className="text-gray-100 font-bold text-4xl -mt-20">
+            404 - Not Found
+          </h1>
+          <div className="mt-5">
             <Link href="/">
-              <a className="link text-sm">Return Home</a>
+              <a className="link text-xl">Return Home</a>
             </Link>
           </div>
         </div>

@@ -1,4 +1,6 @@
 :root {
+  --bg: #222;
+  --bg-darker: rgb(29, 29, 29);
   --button-border-color: #444;
   --button-border-hover-color: rgb(104, 104, 104);
 
@@ -14,8 +16,14 @@
   --border-color: #444;
 }
 
+*,
+*:before,
+*:after {
+  border-color: var(--border-color);
+}
+
 body {
-  background-color: #222;
+  background-color: var(--bg);
   color: #aaa;
 }
 
@@ -38,7 +46,9 @@ input {
 .button {
   background-color: var(--input-bg);
   border-color: var(--button-border-color);
-  @apply border px-2 text-sm h-7 inline-flex items-center;
+  @apply border px-2 text-sm h-7 inline-flex items-center rounded-lg;
+  @apply focus:outline-none;
+  @apply focus:ring-2;
 }
 
 .button:hover {
@@ -55,8 +65,19 @@ input {
 .input-addon {
   background-color: var(--input-bg);
   border-color: var(--border-color);
+  @apply rounded-lg;
   @apply text-base;
   @apply border px-3 text-sm h-10;
+}
+
+.input-addon {
+  @apply rounded-tr-none;
+  @apply rounded-br-none;
+}
+
+.input.with-addon {
+  @apply rounded-tl-none;
+  @apply rounded-bl-none;
 }
 
 .input:focus {
@@ -86,6 +107,7 @@ input {
   @apply resize-none;
   @apply py-3;
   @apply px-3;
+  @apply rounded-lg;
 }
 
 .main {
@@ -105,8 +127,7 @@ input {
 }
 
 .page-title {
-  @apply text-2xl;
-  @apply border-b border-border;
+  @apply text-3xl;
   @apply pb-4;
   @apply mb-8;
   @apply text-gray-100;

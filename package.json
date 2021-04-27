@@ -5,11 +5,9 @@
     "build": "next build",
     "start": "next start --port $PORT",
     "with-env": "node scripts/with-env",
-    "migrate:save": "node scripts/with-env prisma migrate save --experimental",
-    "migrate:up": "node scripts/with-env prisma migrate up --experimental",
-    "migrate:rollback": "node scripts/with-env prisma migrate rollback --experimental",
-    "g:prisma": "prisma generate",
-    "g:gql": "graphql-codegen --config graphql-codegen.yml"
+    "db-push": "prisma db push --preview-feature",
+    "db-generate": "prisma generate",
+    "gql-generate": "graphql-codegen --config graphql-codegen.yml"
   },
   "husky": {
     "hooks": {
@@ -23,7 +21,7 @@
   },
   "dependencies": {
     "@hapi/iron": "^6.0.0",
-    "@prisma/client": "2.12.1",
+    "@prisma/client": "^2.21.2",
     "@snackbar/core": "^1.7.0",
     "@urql/core": "^1.16.0",
     "apollo-server-micro": "^2.19.0",
@@ -33,13 +31,14 @@
     "codemirror": "^5.58.3",
     "cookie": "^0.4.1",
     "dayjs": "^1.9.6",
+    "feed": "^4.2.2",
     "formik": "^2.2.5",
     "graphql": "^15.4.0",
     "limax": "^2.1.0",
     "markdown-it": "^12.0.2",
     "nanoid": "^3.1.20",
-    "next": "^10.0.3",
-    "next-connect": "^0.9.1",
+    "next": "^10.1.3",
+    "next-connect": "^0.10.1",
     "nprogress": "^0.2.0",
     "passport": "^0.4.1",
     "passport-github": "^1.1.0",
@@ -48,6 +47,8 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "reflect-metadata": "^0.1.13",
+    "remove-markdown": "^0.3.0",
+    "superjson": "^1.7.4",
     "type-graphql": "^1.1.1",
     "urql": "^1.11.4",
     "yup": "^0.32.1"
@@ -59,7 +60,6 @@
     "@graphql-codegen/typescript": "1.19.0",
     "@graphql-codegen/typescript-operations": "1.17.12",
     "@graphql-codegen/typescript-urql": "^2.0.3",
-    "@prisma/cli": "2.12.1",
     "@types/codemirror": "^0.0.102",
     "@types/cookie": "^0.4.0",
     "@types/markdown-it": "^10.0.3",
@@ -71,7 +71,9 @@
     "@types/prismjs": "^1.16.2",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "autoprefixer": "^10.0.4",
+    "@types/remove-markdown": "^0.3.0",
+    "autoprefixer": "^10.2.5",
+    "babel-plugin-superjson-next": "^0.2.3",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
@@ -80,7 +82,8 @@
     "postcss": "^8.1.10",
     "preact": "^10.5.7",
     "prettier": "^2.2.1",
-    "tailwindcss": "^2.0.1",
+    "prisma": "^2.21.2",
+    "tailwindcss": "^2.1.2",
     "ts-loader": "^8.0.10",
     "typescript": "^4.1.2"
   }

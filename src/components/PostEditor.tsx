@@ -149,7 +149,7 @@ export const PostEditor: React.FC<{
             <input
               name="slug"
               type="text"
-              className="input md:w-6/12"
+              className="input with-addon md:w-6/12"
               value={form.values.slug}
               onChange={form.handleChange}
               onBlur={form.handleBlur}

@@ -37,7 +37,7 @@ export const LikeButton: React.FC<{
   return (
     <button
       className={clsx(
-        `border border-button-border px-3 h-8 inline-flex items-center focus:outline-none`,
+        `border border-button-border rounded-lg px-3 h-8 inline-flex items-center focus:outline-none`,
         actualIsLiked && `text-red-500`,
       )}
       onClick={likePost}

@@ -28,26 +28,42 @@ export const blogService = {
       where: {
         slug,
       },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        introduction: true,
+        user: {
+          select: {
+            id: true,
+            avatar: true,
+          },
+        },
+      },
     })
 
-    return (
-      blog && {
-        id: blog.id,
-        createdAt: blog.createdAt.toISOString(),
-        updatedAt: blog.updatedAt.toISOString(),
-        slug: blog.slug,
-        introduction: blog.introduction,
-        name: blog.name,
-      }
-    )
+    return blog
   },
 
-  async getRecentPosts(blogId: number) {
+  async getPosts(
+    blogId: number,
+    { tag, limit, page }: { tag?: string; limit?: number; page?: number } = {},
+  ) {
+    limit = limit || 20
+    page = page || 1
     const posts = await prisma.post.findMany({
       where: {
         blogId,
+        tags: tag
+          ? {
+              some: {
+                slug: tag,
+              },
+            }
+          : undefined,
       },
-      take: 11,
+      take: limit + 1,
+      skip: (page - 1) * limit,
       orderBy: {
         createdAt: 'desc',
       },
@@ -62,9 +78,10 @@ export const blogService = {
     })
 
     return {
-      posts: posts.slice(0, 10).map((post) => {
+      data: posts.slice(0, limit).map((post) => {
         return {
           title: post.title,
+          excerpt: post.excerpt,
           date: dayjs(post.createdAt).format('MMM DD, YYYY'),
           slug: post.slug,
           cover: post.cover,
@@ -72,7 +89,8 @@ export const blogService = {
           tags: post.tags,
         }
       }),
-      hasMore: posts.length > 10,
+      hasOlder: posts.length > limit,
+      hasNewer: page > 1,
     }
   },
 
@@ -117,18 +135,6 @@ export const blogService = {
         },
       },
     })
-    return (
-      post && {
-        ...post,
-        tags: post.tags.map((tag) => {
-          return {
-            ...tag,
-            createdAt: dayjs(tag.createdAt).format(),
-          }
-        }),
-        createdAt: dayjs(post.createdAt).format(),
-        updatedAt: dayjs(post.updatedAt).format(),
-      }
-    )
+    return post
   },
 }

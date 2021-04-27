@@ -32,10 +32,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   return {
     props: {
       user,
-      blog: {
-        slug: blog.slug,
-        name: blog.name,
-      },
+      blog,
     },
   }
 }

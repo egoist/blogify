@@ -2,11 +2,12 @@
 
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: monospace;
+  font-family: inherit;
   height: auto;
   color: black;
   direction: ltr;
   border: 1px solid var(--border-color);
+  @apply rounded-lg;
 }
 
 .CodeMirror.CodeMirror-focused {

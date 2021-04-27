@@ -15,7 +15,7 @@ import { prisma } from '@server/prisma'
 import { requireBlogAccess } from '@server/guards/require-blog-access'
 import { customAlphabet } from 'nanoid'
 import { ApolloError } from 'apollo-server-micro'
-import { validateMarkdown } from '@server/markdown'
+import { getExcerpt } from '@server/markdown'
 import { slugify } from '@server/lib/slugify'
 
 const randomSlugSuffix = customAlphabet(
@@ -134,11 +134,12 @@ const parseContent = async ({
       slug += `-${randomSlugSuffix()}`
     }
   }
-  validateMarkdown(content)
+  const excerpt = getExcerpt(content)
   return {
     title,
     slug,
     content,
+    excerpt,
   }
 }
 
@@ -221,6 +222,7 @@ export class PostResolver {
         },
         title: parsed.title,
         content: parsed.content,
+        excerpt: parsed.excerpt,
         slug: parsed.slug,
         cover: args.cover,
         tags: await populateTags(blog.id, args.tags),
@@ -271,6 +273,7 @@ export class PostResolver {
       data: {
         title: parsed.title,
         content: parsed.content,
+        excerpt: parsed.excerpt,
         slug: parsed.slug,
         cover: args.cover,
         tags: await populateTags(post.blogId, args.tags),

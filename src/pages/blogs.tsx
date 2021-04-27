@@ -46,9 +46,9 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   }
 }
 
-const MyBlogs: React.FC<PageProps> = ({ user, blogs }) => {
+const Blogs: React.FC<PageProps> = ({ user, blogs }) => {
   return (
-    <AppLayout user={user} title="My blogs">
+    <AppLayout user={user} title="Blogs">
       <div className="mb-5">
         <Link href="/new-blog">
           <a className="link">Create A New Blog →</a>
@@ -57,9 +57,12 @@ const MyBlogs: React.FC<PageProps> = ({ user, blogs }) => {
       <div className="grid gap-5 md:grid-cols-2">
         {blogs.map((blog) => {
           return (
-            <div key={blog.slug} className="border border-button-border p-5">
+            <div
+              key={blog.slug}
+              className="border border-button-border rounded-lg p-5"
+            >
               <h3 className="text-2xl text-gray-200">
-                <Link href={`/${blog.slug}`}>
+                <Link href={`/${blog.slug}/dashboard`}>
                   <a>{blog.name}</a>
                 </Link>
               </h3>
@@ -82,4 +85,4 @@ const MyBlogs: React.FC<PageProps> = ({ user, blogs }) => {
   )
 }
 
-export default MyBlogs
+export default Blogs

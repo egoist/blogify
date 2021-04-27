@@ -46,10 +46,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
       initialTags: post.tags.map((tag: any) => tag.name).join(', '),
       initialSlug: post.slug,
       initialCover: post.cover,
-      blog: {
-        name: blog.name,
-        slug: blog.slug,
-      },
+      blog,
       postId: post.id,
     },
   }

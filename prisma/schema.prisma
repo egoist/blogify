@@ -2,8 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DB_URL")
 }
 
 generator client {
@@ -11,34 +11,44 @@ generator client {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id           Int       @id @default(autoincrement())
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
   name         String
-  email        String   @unique
-  googleUserId String?  @unique @map("google_user_id")
-  githubUserId String?  @unique @map("github_user_id")
+  email        String    @unique
+  googleUserId String?   @unique @map("google_user_id")
+  githubUserId String?   @unique @map("github_user_id")
   avatar       String?
-  blogs        Blog[]   @relation("user_blogs")
-  likes        Like[]   @relation("user_likes")
-  defaultBlog  Blog?    @relation("user_default_blog")
+  blogs        Blog[]    @relation("user_blogs")
+  likes        Like[]    @relation("user_likes")
+  sessions     Session[]
 
   @@map("users")
 }
 
+model Session {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  token     String    @unique
+  expireIn  DateTime?
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int       @map("user_id")
+
+  @@map("sessions")
+}
+
 model Blog {
-  id               Int      @id @default(autoincrement())
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
-  user             User     @relation("user_blogs", fields: [userId], references: [id])
-  userId           Int      @map("user_id")
-  defaultForUser   User?    @relation("user_default_blog", fields: [defaultForUserId], references: [id])
-  defaultForUserId Int?     @map("default_for_user_id")
-  name             String
-  slug             String   @unique
-  introduction     String
-  posts            Post[]   @relation("blog_posts")
-  tags             Tag[]    @relation("blog_tags")
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  user         User     @relation("user_blogs", fields: [userId], references: [id])
+  userId       Int      @map("user_id")
+  name         String
+  slug         String   @unique
+  introduction String
+  posts        Post[]   @relation("blog_posts")
+  tags         Tag[]    @relation("blog_tags")
 
   @@map("blogs")
 }
@@ -49,6 +59,7 @@ model Post {
   updatedAt  DateTime @updatedAt @map("updated_at")
   title      String
   content    String
+  excerpt    String
   slug       String
   draft      Boolean?
   blog       Blog     @relation("blog_posts", fields: [blogId], references: [id])

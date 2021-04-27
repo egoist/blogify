@@ -46,14 +46,20 @@ const NewBlog: React.FC<PageProps> = ({ hasBlog, user }) => {
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().min(2).max(20).required(),
-      slug: Yup.string().min(2).max(20).required(),
+      slug: Yup.string()
+        .min(2)
+        .max(20)
+        .matches(/^[a-zA-Z0-9_-]+$/, {
+          message: `Only alphabet, numbers, dash and underscore are allowed`,
+        })
+        .required(),
     }),
     async onSubmit(values) {
       const { data, error } = await createBlogMutation({
         ...values,
       })
       if (data) {
-        router.push(`/${data.createBlog.slug}`)
+        router.push(`/blogs`)
       } else if (error) {
         const field =
           error.graphQLErrors &&
@@ -103,7 +109,7 @@ const NewBlog: React.FC<PageProps> = ({ hasBlog, user }) => {
             <span className="input-addon">blogify.dev/</span>
             <input
               name="slug"
-              className="input w-full"
+              className="input with-addon w-full"
               value={form.values.slug}
               onChange={form.handleChange}
               onBlur={form.handleBlur}

@@ -39,12 +39,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   return {
     props: {
       user,
-      blog: {
-        id: blog.id,
-        name: blog.name,
-        slug: blog.slug,
-        introduction: blog.introduction,
-      },
+      blog,
     },
   }
 }
@@ -63,7 +58,13 @@ const BlogSettings: React.FC<PageProps> = ({ user, blog }) => {
     },
     validationSchema: Yup.object().shape({
       name: Yup.string().min(2).max(20).required(),
-      slug: Yup.string().min(2).max(20).required(),
+      slug: Yup.string()
+        .min(2)
+        .max(20)
+        .matches(/^[a-zA-Z0-9_-]+$/, {
+          message: `Only alphabet, numbers, dash and underscore are allowed`,
+        })
+        .required(),
       introduction: Yup.string().max(1000),
     }),
     async onSubmit(values) {
@@ -130,7 +131,7 @@ const BlogSettings: React.FC<PageProps> = ({ user, blog }) => {
             <span className="input-addon">blogify.dev/</span>
             <input
               name="slug"
-              className="input w-full"
+              className="input with-addon w-full"
               value={form.values.slug}
               onChange={form.handleChange}
               onBlur={form.handleBlur}

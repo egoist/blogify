@@ -6,6 +6,7 @@
 
 .rich-content {
   @apply leading-7;
+  @apply text-xl;
 }
 
 .rich-content > *:first-child {
@@ -30,11 +31,18 @@
   padding-left: 20px;
 }
 
-.rich-content ul li:not(:last-child) {
+.rich-content ol {
+  @apply list-decimal;
+  padding-left: 20px;
+}
+
+.rich-content ul li:not(:last-child),
+.rich-content ol li:not(:last-child) {
   @apply mb-2;
 }
 
-.rich-content ul li ul {
+.rich-content ul li ul,
+.rich-content ol li ol {
   @apply mt-1;
 }
 

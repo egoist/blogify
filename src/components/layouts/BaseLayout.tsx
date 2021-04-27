@@ -22,9 +22,9 @@ export const BaseLayout: React.FC<{
       <Head>
         <title>{title}</title>
       </Head>
-      <header className="border-b border-border">
+      <header className="py-5">
         <div className="container h-14 flex items-center justify-between">
-          <h1 className="text-lg text-accent">
+          <h1 className="text-3xl text-accent">
             <Link href={headerTitleHref || '/'}>
               <a>{headerTitle}</a>
             </Link>
@@ -35,8 +35,7 @@ export const BaseLayout: React.FC<{
                 <Link key={link.text} href={link.href}>
                   <a
                     className={clsx(
-                      `link`,
-                      link.href === router.asPath && 'is-active',
+                      link.href === router.asPath && 'text-white',
                     )}
                   >
                     <span className="">{link.text}</span>

@@ -1,12 +1,11 @@
 import passport, { Profile } from 'passport'
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { Strategy as GitHubStrategy } from 'passport-github'
 import { AUTH_COOKIE_NAME } from './constants'
 import { IncomingMessage, ServerResponse } from 'http'
-import { createSecureToken } from './auth'
 import { serialize } from 'cookie'
 import { redirect } from './response'
 import { prisma } from './prisma'
+import { nanoid } from 'nanoid'
 
 passport.serializeUser<any, number>((user, done) => {
   done(null, user.id)
@@ -46,7 +45,7 @@ passport.use(
     {
       clientID: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      callbackURL: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/github/callback`,
+      callbackURL: `/api/auth/github/callback`,
     },
     async (accessToken, refreshToken, profile, cb) => {
       try {
@@ -130,14 +129,22 @@ export async function handleSuccessfulLogin(
   res: ServerResponse,
 ) {
   const { id } = (req as $TsFixMe).user
-  const authToken = await createSecureToken({
-    userId: id,
+  const session = await prisma.session.create({
+    data: {
+      token: nanoid(),
+      user: {
+        connect: {
+          id,
+        },
+      },
+    },
   })
-  const maxAge = 60 * 60 * 24 * 180 // 6 month
-  const authCookie = serialize(AUTH_COOKIE_NAME, authToken, {
+  const maxAge = 60 * 60 * 24 * 90 // 3 month
+  const authCookie = serialize(AUTH_COOKIE_NAME, session.token, {
     path: '/',
     httpOnly: true,
     sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
     maxAge,
   })
   res.setHeader('Set-Cookie', [authCookie])

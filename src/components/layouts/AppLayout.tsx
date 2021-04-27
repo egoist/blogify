@@ -14,8 +14,8 @@ export const AppLayout: React.FC<{ user?: any; title?: string }> = ({
           href: '/about',
         },
         {
-          text: 'My Blogs',
-          href: '/my/blogs',
+          text: 'Blogs',
+          href: '/blogs',
         },
         {
           text: 'Logout',

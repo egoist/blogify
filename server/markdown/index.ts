@@ -1,7 +1,7 @@
 import Markdown from 'markdown-it'
 import Prism from 'prismjs'
 import loadLanguages from 'prismjs/components/index'
-import { excerptPlugin } from './excerpt-plugin'
+import removeMarkdown from 'remove-markdown'
 
 // This is used to render markdown to html to display in browser
 export const renderMarkdown = (content: string) => {
@@ -15,9 +15,7 @@ export const renderMarkdown = (content: string) => {
     },
   })
 
-  md.use(excerptPlugin)
-
-  const env: { excerpt: string } = { excerpt: '' }
+  const env = {}
   const html = md.render(content, env)
   return {
     html,
@@ -25,14 +23,8 @@ export const renderMarkdown = (content: string) => {
   }
 }
 
-// This is used to validate markdown (and extract essential info) before saving to database
-export const validateMarkdown = (content: string) => {
-  const md = new Markdown({
-    html: false,
-  })
-  const env = {}
+export const getExcerpt = (content: string) => {
+  const [excerpt] = content.split(/(<!--more-->|\n\n)/)
 
-  md.parse(content, env)
-
-  return env
+  return removeMarkdown(excerpt)
 }

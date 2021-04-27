@@ -23,4 +23,13 @@ module.exports = {
 
     return config
   },
+
+  async rewrites() {
+    return [
+      {
+        source: '/:blog/atom.xml',
+        destination: '/api/feed/:blog',
+      },
+    ]
+  },
 }

@@ -1,4 +1,3 @@
-import { AUTH_COOKIE_NAME } from '@server/constants'
 import { AuthenticationError } from 'apollo-server-micro'
 import { IncomingMessage } from 'http'
 import { NextApiRequest } from 'next'

@@ -1,5 +1,5 @@
-import { ArchivedPostList } from '@/components/AchivedPostList'
 import { BlogInfo, BlogLayout } from '@/components/layouts/BlogLayout'
+import { PostList } from '@/components/PostList'
 import { getServerSession, UserSession } from '@server/auth'
 
 import { prisma } from '@server/prisma'
@@ -7,25 +7,31 @@ import { blogService } from '@server/services/blog.service'
 import { GetServerSideProps } from 'next'
 
 type PageProps = {
-  user: UserSession | null
   blog: BlogInfo
   tagName: string
-  posts: Array<{
-    title: string
-    date: string
-    slug: string
-  }>
+  posts: {
+    data: Array<{
+      title: string
+      slug: string
+      date: string
+      excerpt: string
+      cover?: string | null
+      coverAlt?: string | null
+      tags: Array<{
+        name: string
+        slug: string
+      }>
+    }>
+    hasOlder: boolean
+    hasNewer: boolean
+  }
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
   ctx,
 ) => {
-  const { user } = await getServerSession(ctx.req)
-  const blog = await prisma.blog.findUnique({
-    where: {
-      slug: ctx.query.blog as string,
-    },
-  })
+  const blogSlug = ctx.query.blog as string
+  const blog = await blogService.getBlogBySlug(blogSlug)
   if (!blog) {
     return { notFound: true }
   }
@@ -39,14 +45,11 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   if (!tag) {
     return { notFound: true }
   }
-  const posts = await blogService.getAllPosts(blog.id, tagSlug)
+  const page = parseInt((ctx.query.page as string) || '1')
+  const posts = await blogService.getPosts(blog.id, { tag: tagSlug, page })
   return {
     props: {
-      user,
-      blog: {
-        name: blog.name,
-        slug: blog.slug,
-      },
+      blog,
       tagName: tag.name,
       posts,
     },
@@ -56,8 +59,8 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 const TagsPage: React.FC<PageProps> = ({ blog, tagName, posts }) => {
   return (
     <BlogLayout blog={blog} title={`Tag: ${tagName}`}>
-      <h2 className="page-title">Tag: {tagName}</h2>
-      <ArchivedPostList posts={posts} blogSlug={blog.slug} />
+      <h2 className="page-title">Posts in: #{tagName}</h2>
+      <PostList posts={posts} blogSlug={blog.slug} />
     </BlogLayout>
   )
 }
