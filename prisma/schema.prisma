@@ -11,17 +11,19 @@ generator client {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-  name         String
-  email        String    @unique
-  googleUserId String?   @unique @map("google_user_id")
-  githubUserId String?   @unique @map("github_user_id")
-  avatar       String?
-  blogs        Blog[]    @relation("user_blogs")
-  likes        Like[]    @relation("user_likes")
-  sessions     Session[]
+  id               Int       @id @default(autoincrement())
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  name             String
+  email            String    @unique
+  googleUserId     String?   @unique @map("google_user_id")
+  githubUserId     String?   @unique @map("github_user_id")
+  avatar           String?
+  blogs            Blog[]    @relation("user_blogs")
+  likes            Like[]    @relation("user_likes")
+  sessions         Session[]
+  lastActiveBlog   Blog?     @relation(name: "user_last_active_blog", fields: [lastActiveBlogId], references: [id])
+  lastActiveBlogId Int?
 
   @@map("users")
 }
@@ -39,16 +41,17 @@ model Session {
 }
 
 model Blog {
-  id           Int      @id @default(autoincrement())
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
-  user         User     @relation("user_blogs", fields: [userId], references: [id])
-  userId       Int      @map("user_id")
-  name         String
-  slug         String   @unique
-  introduction String
-  posts        Post[]   @relation("blog_posts")
-  tags         Tag[]    @relation("blog_tags")
+  id                 Int      @id @default(autoincrement())
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  user               User     @relation("user_blogs", fields: [userId], references: [id])
+  userId             Int      @map("user_id")
+  name               String
+  slug               String   @unique
+  introduction       String
+  posts              Post[]   @relation("blog_posts")
+  tags               Tag[]    @relation("blog_tags")
+  lastActiveForUsers User[]   @relation("user_last_active_blog")
 
   @@map("blogs")
 }
