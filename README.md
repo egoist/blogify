@@ -9,13 +9,13 @@ https://blogify.dev
 Generate a Prisma client:
 
 ```bash
-yarn g:prisma
+yarn db-generate
 ```
 
 Run database migration first:
 
 ```bash
-yarn migrate:up
+yarn migrate-deploy
 ```
 
 Start Server:
@@ -27,8 +27,8 @@ yarn dev
 ## Deployment
 
 ```bash
-yarn g:prisma
-yarn migrate:up
+yarn db-generate
+yarn migrate-deploy
 yarn start
 ```
 

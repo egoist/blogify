@@ -7,6 +7,7 @@
     "with-env": "node scripts/with-env",
     "db-push": "prisma db push --preview-feature",
     "db-generate": "prisma generate",
+    "migrate-deploy": "prisma migrate deploy",
     "gql-generate": "graphql-codegen --config graphql-codegen.yml"
   },
   "husky": {
