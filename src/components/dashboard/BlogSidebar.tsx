@@ -12,11 +12,9 @@ const BlogSelect = () => {
   const [open, setOpen] = React.useState(false)
   const elRef = React.useRef<HTMLDivElement | null>(null)
 
-  const currentBlog = React.useMemo(() => {
-    return myBlogsResult.data?.blogs.find(
-      (blog) => blog.slug === router.query.blog,
-    )
-  }, [router.query.slug, myBlogsResult.data])
+  const currentBlog = myBlogsResult.data?.blogs.find(
+    (blog) => blog.slug === router.query.blog,
+  )
 
   React.useEffect(() => {
     const handleClick = (e: any) => {
