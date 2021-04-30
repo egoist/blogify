@@ -48,7 +48,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
 const Blogs: React.FC<PageProps> = ({ user, blogs }) => {
   return (
-    <AppLayout user={user} title="Blogs">
+    <AppLayout title="Blogs">
       <div className="mb-5">
         <Link href="/new-blog">
           <a className="link">Create A New Blog →</a>

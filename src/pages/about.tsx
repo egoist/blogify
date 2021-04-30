@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
 const About: React.FC<PageProps> = ({ user }) => {
   return (
-    <AppLayout title="About" user={user}>
+    <AppLayout title="About">
       <h2 className="page-title">About</h2>
       <div className="rich-content text-gray-200">
         <p>Blogify is a blogging platform for minimalists and developers.</p>

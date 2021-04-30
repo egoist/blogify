@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
 const Privacy: React.FC<PageProps> = ({ user }) => {
   return (
-    <AppLayout title="Privacy Policy" user={user}>
+    <AppLayout title="Privacy Policy">
       <h2 className="page-title">Privacy Policy</h2>
       <div className="rich-content text-gray-200">
         <h2>What information Blogify collects and Why</h2>

@@ -20,7 +20,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
 
 const Terms: React.FC<PageProps> = ({ user }) => {
   return (
-    <AppLayout title="Terms of Service" user={user}>
+    <AppLayout title="Terms of Service">
       <h2 className="page-title">Terms of Service</h2>
       <div className="rich-content text-gray-200">
         <h2>Terms</h2>
