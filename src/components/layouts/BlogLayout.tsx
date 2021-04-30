@@ -28,6 +28,7 @@ export const BlogLayout: React.FC<{
           title={blog.name}
           type="application/atom+xml"
         />
+        {avatar && <link rel="icon" type="image/png" href={avatar} />}
       </Head>
       <div className="pt-10 pb-10 max-w-3xl mx-auto px-5 md:px-8 flex justify-between items-center">
         <div className="flex space-x-3 items-center">
