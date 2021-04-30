@@ -21,7 +21,7 @@ export const AppLayout: React.FC<{
       <Head>
         <title>{title}</title>
       </Head>
-      <header className="px-5 border-b fixed h-14 top-0 left-0 right-0">
+      <header className="px-5 border-b fixed h-14 top-0 left-0 right-0 bg-bg">
         <div className="h-full flex items-center justify-between">
           <h1 className="text-accent">
             <Link href={'/'}>

@@ -2,7 +2,7 @@ import { AppLayout } from '@/components/layouts/AppLayout'
 
 const Login = () => {
   return (
-    <AppLayout title="Login">
+    <AppLayout>
       <div className="text-center mt-8">
         <a href="/api/auth/github" className="button is-large">
           <svg

@@ -59,16 +59,17 @@ export const PostEditor: React.FC<{
   }, [])
 
   React.useEffect(() => {
-    if (!initialPost) return
+    if (!initialPost || !editor) return
 
     form.setValues({
       title: initialPost.title,
-      content: initialPost.content,
+      content: '',
       cover: initialPost.cover || '',
       slug: initialPost.slug || '',
       tags: initialPost.tags.map((tag) => tag.name).join(', '),
     })
-  }, [initialPost])
+    editor.setValue(initialPost.content)
+  }, [initialPost, editor])
 
   const form = useFormik({
     initialValues: {
@@ -148,8 +149,6 @@ export const PostEditor: React.FC<{
           <textarea
             className="hidden"
             ref={textarea}
-            value={form.values.content}
-            onChange={() => {}}
             placeholder="Write something brilliant.."
           ></textarea>
           {!editor && <div>Loading..</div>}
