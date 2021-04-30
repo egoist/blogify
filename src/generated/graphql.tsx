@@ -84,6 +84,7 @@ export type Mutation = {
   __typename?: 'Mutation'
   createBlog: Blog
   updateBlog: Blog
+  setLastActiveBlog: Scalars['Boolean']
   createPost: Post
   updatePost: Post
   deletePost: Scalars['Boolean']
@@ -100,6 +101,10 @@ export type MutationUpdateBlogArgs = {
   slug: Scalars['String']
   name: Scalars['String']
   introduction: Scalars['String']
+}
+
+export type MutationSetLastActiveBlogArgs = {
+  id: Scalars['Int']
 }
 
 export type MutationCreatePostArgs = {
@@ -218,6 +223,15 @@ export type LikePostMutation = { __typename?: 'Mutation' } & {
     'likesCount' | 'isLiked'
   >
 }
+
+export type SetLastActiveBlogMutationVariables = Exact<{
+  id: Scalars['Int']
+}>
+
+export type SetLastActiveBlogMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'setLastActiveBlog'
+>
 
 export type UpdateBlogMutationVariables = Exact<{
   id: Scalars['Int']
@@ -870,6 +884,52 @@ export function useLikePostMutation() {
   return Urql.useMutation<LikePostMutation, LikePostMutationVariables>(
     LikePostDocument,
   )
+}
+export const SetLastActiveBlogDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'setLastActiveBlog' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'setLastActiveBlog' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export function useSetLastActiveBlogMutation() {
+  return Urql.useMutation<
+    SetLastActiveBlogMutation,
+    SetLastActiveBlogMutationVariables
+  >(SetLastActiveBlogDocument)
 }
 export const UpdateBlogDocument: DocumentNode = {
   kind: 'Document',

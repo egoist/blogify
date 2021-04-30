@@ -157,4 +157,21 @@ export class BlogResolver {
     })
     return updatedBlog
   }
+
+  @Mutation((returns) => Boolean)
+  async setLastActiveBlog(
+    @GqlContext() ctx: TGqlContext,
+    @Arg('id', (type) => Int) id: number,
+  ) {
+    const user = await requireAuth(ctx.req)
+    await prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        lastActiveBlogId: id,
+      },
+    })
+    return true
+  }
 }

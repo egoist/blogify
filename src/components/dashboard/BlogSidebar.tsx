@@ -1,6 +1,9 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { useGetMyBlogsQuery } from '@/generated/graphql'
+import {
+  useGetMyBlogsQuery,
+  useSetLastActiveBlogMutation,
+} from '@/generated/graphql'
 import Link from 'next/link'
 import clsx from 'clsx'
 
@@ -15,6 +18,7 @@ const BlogSelect = () => {
   const currentBlog = myBlogsResult.data?.blogs.find(
     (blog) => blog.slug === router.query.blog,
   )
+  const [, setLastActiveBlog] = useSetLastActiveBlogMutation()
 
   React.useEffect(() => {
     const handleClick = (e: any) => {
@@ -25,6 +29,12 @@ const BlogSelect = () => {
     document.addEventListener('click', handleClick)
     return () => document.removeEventListener('click', handleClick)
   }, [])
+
+  React.useEffect(() => {
+    if (currentBlog?.id) {
+      setLastActiveBlog({ id: currentBlog.id })
+    }
+  }, [currentBlog?.id])
 
   return (
     <div className="relative" ref={elRef}>

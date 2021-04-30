@@ -1,0 +1,3 @@
+mutation setLastActiveBlog($id: Int!) {
+  setLastActiveBlog(id: $id)
+}
