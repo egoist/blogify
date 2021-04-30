@@ -1,66 +1,64 @@
 import Link from 'next/link'
 import React from 'react'
-import { BaseLayout } from './BaseLayout'
+import Head from 'next/head'
+import clsx from 'clsx'
+import { useRouter } from 'next/router'
 
-export const AppLayout: React.FC<{ user?: any; title?: string }> = ({
-  user,
-  children,
-  title,
-}) => {
-  const nav = user
-    ? [
-        {
-          text: 'About',
-          href: '/about',
-        },
-        {
-          text: 'Blogs',
-          href: '/blogs',
-        },
-        {
-          text: 'Logout',
-          href: '/api/auth/logout',
-        },
-      ]
-    : [
-        {
-          text: 'About',
-          href: '/about',
-        },
-        {
-          text: 'Login',
-          href: '/login',
-        },
-      ]
+export const AppLayout: React.FC<{
+  title?: string
+  renderSidebar?: () => React.ReactElement
+  mainTitle?: string | false
+}> = ({ children, title, renderSidebar, mainTitle }) => {
+  const router = useRouter()
+  const nav = [
+    {
+      text: 'Logout',
+      href: '/api/auth/logout',
+    },
+  ]
   return (
-    <BaseLayout
-      title={title ? `${title} - Blogify` : `Blogify`}
-      headerTitle="Blogify"
-      nav={nav}
-      children={children}
-      footer={
-        <div className="text-center">
-          <Link href="/">
-            <a>Blogify</a>
-          </Link>
-          <div className="space-x-3 text-xs mt-2">
-            <Link href="/terms">
-              <a className="link">Terms</a>
+    <>
+      <Head>
+        <title>{title}</title>
+      </Head>
+      <header className="px-5 border-b fixed h-14 top-0 left-0 right-0">
+        <div className="h-full flex items-center justify-between">
+          <h1 className="text-accent">
+            <Link href={'/'}>
+              <a>Blogify</a>
             </Link>
-            <Link href="/privacy">
-              <a className="link">Privacy</a>
-            </Link>
-            <a
-              className="link"
-              href="https://github.com/egoist/blogify"
-              target="blank"
-              rel="noreferer nofollow"
-            >
-              GitHub
-            </a>
+          </h1>
+          <div className="space-x-5">
+            {nav.map((link) => {
+              return (
+                <Link key={link.text} href={link.href}>
+                  <a
+                    className={clsx(
+                      'hover:text-white',
+                      link.href === router.asPath && 'text-white',
+                    )}
+                  >
+                    <span className="">{link.text}</span>
+                  </a>
+                </Link>
+              )
+            })}
           </div>
         </div>
-      }
-    />
+      </header>
+
+      {renderSidebar && renderSidebar()}
+
+      <div className={clsx(`main pt-14`, renderSidebar && `md:ml-72`)}>
+        {title && mainTitle !== false && (
+          <div className="container">
+            <h2 className="mb-8 text-3xl text-gray-200">
+              {mainTitle || title}
+            </h2>
+          </div>
+        )}
+        <div className="container">{children}</div>
+      </div>
+    </>
   )
 }

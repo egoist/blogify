@@ -54,6 +54,7 @@ export const blogService = {
     const posts = await prisma.post.findMany({
       where: {
         blogId,
+        deletedAt: null,
         tags: tag
           ? {
               some: {
@@ -98,6 +99,7 @@ export const blogService = {
     const posts = await prisma.post.findMany({
       where: {
         blogId,
+        deletedAt: null,
         tags: tagSlug
           ? {
               some: {
@@ -125,6 +127,7 @@ export const blogService = {
       where: {
         blogId,
         slug,
+        deletedAt: null,
       },
       include: {
         tags: true,

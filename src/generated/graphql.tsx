@@ -22,7 +22,62 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query'
-  hello: Scalars['String']
+  /** Get blogs for current user */
+  blogs: Array<Blog>
+  blog: Blog
+  posts: PostsConnection
+  post: Post
+}
+
+export type QueryBlogArgs = {
+  slug: Scalars['String']
+}
+
+export type QueryPostsArgs = {
+  blogSlug: Scalars['String']
+  limit?: Maybe<Scalars['Int']>
+  page?: Maybe<Scalars['Int']>
+  tagSlug?: Maybe<Scalars['String']>
+}
+
+export type QueryPostArgs = {
+  id: Scalars['Int']
+}
+
+export type Blog = {
+  __typename?: 'Blog'
+  id: Scalars['Int']
+  name: Scalars['String']
+  introduction: Scalars['String']
+  slug: Scalars['String']
+}
+
+export type PostsConnection = {
+  __typename?: 'PostsConnection'
+  data: Array<Post>
+  hasOlder: Scalars['Boolean']
+  hasNewer: Scalars['Boolean']
+  total: Scalars['Int']
+}
+
+export type Post = {
+  __typename?: 'Post'
+  id: Scalars['Int']
+  slug: Scalars['String']
+  content: Scalars['String']
+  title: Scalars['String']
+  createdAt: Scalars['DateTime']
+  updatedAt: Scalars['DateTime']
+  cover?: Maybe<Scalars['String']>
+  date: Scalars['String']
+  tags: Array<Tag>
+}
+
+export type Tag = {
+  __typename?: 'Tag'
+  id: Scalars['Int']
+  name: Scalars['String']
+  slug: Scalars['String']
 }
 
 export type Mutation = {
@@ -31,6 +86,7 @@ export type Mutation = {
   updateBlog: Blog
   createPost: Post
   updatePost: Post
+  deletePost: Scalars['Boolean']
   likePost: LikePostResult
 }
 
@@ -64,26 +120,12 @@ export type MutationUpdatePostArgs = {
   cover: Scalars['String']
 }
 
+export type MutationDeletePostArgs = {
+  id: Scalars['Int']
+}
+
 export type MutationLikePostArgs = {
   postId: Scalars['Int']
-}
-
-export type Blog = {
-  __typename?: 'Blog'
-  id: Scalars['ID']
-  name: Scalars['String']
-  introduction: Scalars['String']
-  slug: Scalars['String']
-}
-
-export type Post = {
-  __typename?: 'Post'
-  id: Scalars['ID']
-  slug: Scalars['String']
-  content: Scalars['String']
-  title: Scalars['String']
-  createdAt: Scalars['DateTime']
-  updatedAt: Scalars['DateTime']
 }
 
 export type LikePostResult = {
@@ -112,6 +154,58 @@ export type CreatePostMutationVariables = Exact<{
 
 export type CreatePostMutation = { __typename?: 'Mutation' } & {
   createPost: { __typename?: 'Post' } & Pick<Post, 'id' | 'slug'>
+}
+
+export type DeletePostMutationVariables = Exact<{
+  id: Scalars['Int']
+}>
+
+export type DeletePostMutation = { __typename?: 'Mutation' } & Pick<
+  Mutation,
+  'deletePost'
+>
+
+export type GetBlogForDashboardQueryVariables = Exact<{
+  slug: Scalars['String']
+}>
+
+export type GetBlogForDashboardQuery = { __typename?: 'Query' } & {
+  blog: { __typename?: 'Blog' } & Pick<Blog, 'id' | 'name'>
+}
+
+export type GetMyBlogsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetMyBlogsQuery = { __typename?: 'Query' } & {
+  blogs: Array<{ __typename?: 'Blog' } & Pick<Blog, 'id' | 'slug' | 'name'>>
+}
+
+export type GetPostForEditQueryVariables = Exact<{
+  id: Scalars['Int']
+}>
+
+export type GetPostForEditQuery = { __typename?: 'Query' } & {
+  post: { __typename?: 'Post' } & Pick<
+    Post,
+    'id' | 'title' | 'content' | 'slug' | 'cover'
+  > & { tags: Array<{ __typename?: 'Tag' } & Pick<Tag, 'id' | 'name'>> }
+}
+
+export type GetPostsForDashboardQueryVariables = Exact<{
+  blogSlug: Scalars['String']
+  page: Scalars['Int']
+  limit?: Maybe<Scalars['Int']>
+  tagSlug?: Maybe<Scalars['String']>
+}>
+
+export type GetPostsForDashboardQuery = { __typename?: 'Query' } & {
+  posts: { __typename?: 'PostsConnection' } & Pick<
+    PostsConnection,
+    'hasOlder' | 'hasNewer' | 'total'
+  > & {
+      data: Array<
+        { __typename?: 'Post' } & Pick<Post, 'id' | 'slug' | 'title' | 'date'>
+      >
+    }
 }
 
 export type LikePostMutationVariables = Exact<{
@@ -384,6 +478,343 @@ export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(
     CreatePostDocument,
   )
+}
+export const DeletePostDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'deletePost' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deletePost' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export function useDeletePostMutation() {
+  return Urql.useMutation<DeletePostMutation, DeletePostMutationVariables>(
+    DeletePostDocument,
+  )
+}
+export const GetBlogForDashboardDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getBlogForDashboard' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'slug' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'blog' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'slug' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'slug' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export function useGetBlogForDashboardQuery(
+  options: Omit<
+    Urql.UseQueryArgs<GetBlogForDashboardQueryVariables>,
+    'query'
+  > = {},
+) {
+  return Urql.useQuery<GetBlogForDashboardQuery>({
+    query: GetBlogForDashboardDocument,
+    ...options,
+  })
+}
+export const GetMyBlogsDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getMyBlogs' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'blogs' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export function useGetMyBlogsQuery(
+  options: Omit<Urql.UseQueryArgs<GetMyBlogsQueryVariables>, 'query'> = {},
+) {
+  return Urql.useQuery<GetMyBlogsQuery>({
+    query: GetMyBlogsDocument,
+    ...options,
+  })
+}
+export const GetPostForEditDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getPostForEdit' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'post' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'content' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'cover' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'tags' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export function useGetPostForEditQuery(
+  options: Omit<Urql.UseQueryArgs<GetPostForEditQueryVariables>, 'query'> = {},
+) {
+  return Urql.useQuery<GetPostForEditQuery>({
+    query: GetPostForEditDocument,
+    ...options,
+  })
+}
+export const GetPostsForDashboardDocument: DocumentNode = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getPostsForDashboard' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'blogSlug' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'page' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tagSlug' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'posts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'blogSlug' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'blogSlug' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'page' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'page' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tagSlug' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tagSlug' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'data' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'slug' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'date' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'hasOlder' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'hasNewer' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'total' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+}
+
+export function useGetPostsForDashboardQuery(
+  options: Omit<
+    Urql.UseQueryArgs<GetPostsForDashboardQueryVariables>,
+    'query'
+  > = {},
+) {
+  return Urql.useQuery<GetPostsForDashboardQuery>({
+    query: GetPostsForDashboardDocument,
+    ...options,
+  })
 }
 export const LikePostDocument: DocumentNode = {
   kind: 'Document',

@@ -12,3 +12,9 @@ export async function requireAuth(req: NextApiRequest | IncomingMessage) {
 
   return user
 }
+
+export async function optionalAuth(req: NextApiRequest | IncomingMessage) {
+  const { user } = await getServerSession(req)
+
+  return user
+}

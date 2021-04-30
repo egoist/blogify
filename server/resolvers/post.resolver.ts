@@ -9,6 +9,10 @@ import {
   Mutation,
   ObjectType,
   Resolver,
+  Query,
+  FieldResolver,
+  Root,
+  Arg,
 } from 'type-graphql'
 import { requireAuth } from '@server/guards/require-auth'
 import { prisma } from '@server/prisma'
@@ -17,6 +21,8 @@ import { customAlphabet } from 'nanoid'
 import { ApolloError } from 'apollo-server-micro'
 import { getExcerpt } from '@server/markdown'
 import { slugify } from '@server/lib/slugify'
+import { blogService } from '@server/services/blog.service'
+import dayjs from 'dayjs'
 
 const randomSlugSuffix = customAlphabet(
   `abcdefghijklmnopqrstuvwxyz0123456789`,
@@ -46,7 +52,7 @@ class CreatePostArgs {
 
 @ObjectType()
 class Post {
-  @Field((type) => ID)
+  @Field((type) => Int)
   id: number
 
   @Field()
@@ -63,6 +69,9 @@ class Post {
 
   @Field()
   updatedAt: Date
+
+  @Field((type) => String, { nullable: true })
+  cover?: string | null
 }
 
 @ArgsType()
@@ -186,8 +195,130 @@ const populateTags = async (blogId: number, tags: string) => {
   return result
 }
 
-@Resolver()
+@ArgsType()
+class GetPostsArgs {
+  @Field()
+  blogSlug: string
+
+  @Field((type) => Int, { defaultValue: 20 })
+  limit: number
+
+  @Field((type) => Int, { defaultValue: 1 })
+  page: number
+
+  @Field({ nullable: true })
+  tagSlug?: string
+}
+
+@ObjectType()
+class PostsConnection {
+  @Field((type) => [Post])
+  data: Post[]
+
+  @Field()
+  hasOlder: boolean
+
+  @Field()
+  hasNewer: boolean
+
+  @Field((type) => Int)
+  total: number
+}
+
+@ObjectType()
+class Tag {
+  @Field((type) => Int)
+  id: number
+
+  @Field()
+  name: string
+
+  @Field()
+  slug: string
+}
+
+@ArgsType()
+class PostByIdArgs {
+  @Field(() => Int)
+  id: number
+}
+
+@Resolver((of) => Post)
 export class PostResolver {
+  @Query((returns) => PostsConnection)
+  async posts(@Args() args: GetPostsArgs): Promise<PostsConnection> {
+    const blog = await prisma.blog.findUnique({
+      where: {
+        slug: args.blogSlug,
+      },
+    })
+    if (!blog) throw new ApolloError(`blog not found`)
+
+    const skip = (args.page - 1) * args.limit
+    const whereClause = {
+      blogId: blog.id,
+      deletedAt: null,
+      tags: args.tagSlug
+        ? {
+            some: {
+              slug: args.tagSlug,
+            },
+          }
+        : undefined,
+    }
+    const posts = await prisma.post.findMany({
+      where: whereClause,
+      take: args.limit + 1,
+      skip,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+    const total = await prisma.post.count({
+      where: whereClause,
+    })
+
+    return {
+      data: posts.slice(0, args.limit),
+      hasOlder: posts.length > args.limit,
+      hasNewer: args.page > 1,
+      total,
+    }
+  }
+
+  @Query((returns) => Post)
+  async post(@Args() args: PostByIdArgs) {
+    const post = await prisma.post.findUnique({
+      where: {
+        id: args.id,
+      },
+    })
+
+    if (!post) throw new ApolloError(`post not found`)
+
+    if (post.deletedAt) throw new ApolloError(`this post has been deleted`)
+
+    return post
+  }
+
+  @FieldResolver((returns) => String)
+  date(@Root() post: Post): string {
+    return dayjs(post.createdAt).format('MMM DD, YYYY')
+  }
+
+  @FieldResolver((returns) => [Tag])
+  tags(@Root() post: Post): Promise<Tag[]> {
+    return prisma.tag.findMany({
+      where: {
+        posts: {
+          some: {
+            id: post.id,
+          },
+        },
+      },
+    })
+  }
+
   @Mutation((returns) => Post)
   async createPost(
     @GqlContext() ctx: TGqlContext,
@@ -251,7 +382,7 @@ export class PostResolver {
       throw new ApolloError(`Post not found`)
     }
 
-    requireBlogAccess(user, post.blog)
+    await requireBlogAccess(user, post.blog)
 
     const parsed = await parseContent({
       title: args.title,
@@ -280,6 +411,37 @@ export class PostResolver {
       },
     })
     return updatedPost
+  }
+
+  @Mutation((returns) => Boolean)
+  async deletePost(
+    @GqlContext() ctx: TGqlContext,
+    @Arg('id', (type) => Int) id: number,
+  ) {
+    const user = await requireAuth(ctx.req)
+    const post = await prisma.post.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        blog: true,
+      },
+    })
+
+    if (!post) {
+      throw new ApolloError(`Post not found`)
+    }
+
+    await requireBlogAccess(user, post.blog)
+    await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    })
+    return true
   }
 
   @Mutation((returns) => LikePostResult)

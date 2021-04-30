@@ -25,6 +25,7 @@
 body {
   background-color: var(--bg);
   color: #aaa;
+  font-family: Inter, Helvetica, sans-serif;
 }
 
 input {

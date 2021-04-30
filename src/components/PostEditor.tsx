@@ -1,5 +1,6 @@
 import {
   useCreatePostMutation,
+  useGetPostForEditQuery,
   useUpdatePostMutation,
 } from '@/generated/graphql'
 import { loadEditor } from '@/lib/editor'
@@ -9,32 +10,29 @@ import * as Yup from 'yup'
 import React from 'react'
 import { Button } from './Button'
 import { BlogInfo, BlogLayout } from './layouts/BlogLayout'
+import { AppLayout } from './layouts/AppLayout'
+import { BlogSidebar } from './dashboard/BlogSidebar'
 
 export const PostEditor: React.FC<{
   user: any
-  initialTitle: string
-  initialContent: string
-  initialTags?: string
-  initialSlug?: string
-  initialCover?: string | null
   postId?: number
   blog: BlogInfo
-}> = ({
-  user,
-  initialTitle,
-  initialContent,
-  initialTags,
-  initialSlug,
-  initialCover,
-  blog,
-  postId,
-}) => {
+}> = ({ user, blog, postId }) => {
   const router = useRouter()
   const textarea = React.useRef<HTMLTextAreaElement>(null)
   const [
     editor,
     setEditor,
   ] = React.useState<CodeMirror.EditorFromTextArea | null>(null)
+
+  const [initialPostResult] = useGetPostForEditQuery({
+    variables: {
+      id: postId!,
+    },
+    pause: !postId,
+  })
+  const initialPost = initialPostResult.data?.post
+
   const [, createPostMutation] = useCreatePostMutation()
   const [, updatePostMutation] = useUpdatePostMutation()
   const initEditor = async () => {
@@ -52,19 +50,33 @@ export const PostEditor: React.FC<{
     })
     setEditor(editor)
   }
+
   React.useEffect(() => {
     initEditor()
     return () => {
       editor && editor.toTextArea()
     }
   }, [])
+
+  React.useEffect(() => {
+    if (!initialPost) return
+
+    form.setValues({
+      title: initialPost.title,
+      content: initialPost.content,
+      cover: initialPost.cover || '',
+      slug: initialPost.slug || '',
+      tags: initialPost.tags.map((tag) => tag.name).join(', '),
+    })
+  }, [initialPost])
+
   const form = useFormik({
     initialValues: {
-      title: initialTitle,
-      content: initialContent,
-      tags: initialTags || '',
-      slug: initialSlug || '',
-      cover: initialCover || '',
+      title: '',
+      content: '',
+      tags: '',
+      slug: '',
+      cover: '',
     },
     validationSchema: Yup.object().shape({
       title: Yup.string().required(),
@@ -84,6 +96,7 @@ export const PostEditor: React.FC<{
         }),
     }),
     async onSubmit(values) {
+      const dashboardLink = `/dashboard/${blog.slug}`
       if (postId) {
         const { data } = await updatePostMutation({
           id: postId,
@@ -94,7 +107,7 @@ export const PostEditor: React.FC<{
           cover: values.cover,
         })
         if (data) {
-          router.push(`/${router.query.blog}/${data.updatePost.slug}`)
+          router.push(dashboardLink)
         }
       } else {
         const { data } = await createPostMutation({
@@ -106,13 +119,17 @@ export const PostEditor: React.FC<{
           cover: values.cover,
         })
         if (data) {
-          router.push(`/${router.query.blog}/${data.createPost.slug}`)
+          router.push(dashboardLink)
         }
       }
     },
   })
+
   return (
-    <BlogLayout blog={blog} title={postId ? `Edit post` : `New post`}>
+    <AppLayout
+      title={postId ? `Edit post` : `New post`}
+      renderSidebar={() => <BlogSidebar />}
+    >
       <form onSubmit={form.handleSubmit}>
         <div className="mb-3">
           <input
@@ -204,6 +221,6 @@ export const PostEditor: React.FC<{
           </div>
         )}
       </form>
-    </BlogLayout>
+    </AppLayout>
   )
 }

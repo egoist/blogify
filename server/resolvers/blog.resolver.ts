@@ -3,19 +3,23 @@ import type { TGqlContext } from '@server/decorators/gql-context'
 import { requireAuth } from '@server/guards/require-auth'
 import { prisma } from '@server/prisma'
 import {
+  Arg,
   Args,
   ArgsType,
   Field,
+  FieldResolver,
   ID,
   Int,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  Root,
 } from 'type-graphql'
 import { MaxLength, MinLength } from 'class-validator'
 import { requireBlogAccess } from '@server/guards/require-blog-access'
 import { ApolloError } from 'apollo-server-micro'
+import { blogService } from '@server/services/blog.service'
 
 @ArgsType()
 class CreateBlogArgs {
@@ -51,7 +55,7 @@ class UpdateBlogArgs {
 
 @ObjectType()
 class Blog {
-  @Field((type) => ID)
+  @Field((type) => Int)
   id: number
 
   @Field()
@@ -77,11 +81,28 @@ const checkIfBlogSlugIsUsed = async (slug: string) => {
   }
 }
 
-@Resolver()
+@Resolver((of) => Blog)
 export class BlogResolver {
-  @Query((returns) => String)
-  hello() {
-    return 'hello'
+  @Query((returns) => [Blog], {
+    description: `Get blogs for current user`,
+  })
+  async blogs(@GqlContext() ctx: TGqlContext) {
+    const user = await requireAuth(ctx.req)
+    const blogs = await blogService.getBlogsByUser(user.id)
+    return blogs
+  }
+
+  @Query((returns) => Blog)
+  async blog(@Arg('slug') slug: string) {
+    const blog = await prisma.blog.findUnique({
+      where: {
+        slug,
+      },
+    })
+    if (!blog) {
+      throw new ApolloError(`Blog not found`)
+    }
+    return blog
   }
 
   @Mutation((returns) => Blog)

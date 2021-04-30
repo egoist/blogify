@@ -1,0 +1,18 @@
+query getPostsForDashboard(
+  $blogSlug: String!
+  $page: Int!
+  $limit: Int
+  $tagSlug: String
+) {
+  posts(blogSlug: $blogSlug, page: $page, limit: $limit, tagSlug: $tagSlug) {
+    data {
+      id
+      slug
+      title
+      date
+    }
+    hasOlder
+    hasNewer
+    total
+  }
+}

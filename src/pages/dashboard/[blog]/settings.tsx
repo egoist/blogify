@@ -11,6 +11,7 @@ import React from 'react'
 import { createSnackbar } from '@snackbar/core'
 import { useRouter } from 'next/router'
 import { BlogInfo } from '@/components/layouts/BlogLayout'
+import { BlogSidebar } from '@/components/dashboard/BlogSidebar'
 
 type PageProps = {
   user: UserSession
@@ -78,7 +79,7 @@ const BlogSettings: React.FC<PageProps> = ({ user, blog }) => {
         createSnackbar(`Changes have been saved`, {
           timeout: 3000,
         })
-        router.replace(`/${values.slug}/settings`)
+        router.replace(`/dashboard/${values.slug}/settings`)
       } else if (error) {
         const field =
           error.graphQLErrors &&
@@ -101,15 +102,11 @@ const BlogSettings: React.FC<PageProps> = ({ user, blog }) => {
   })
 
   return (
-    <AppLayout user={user} title={title}>
-      <h2 className="font-bold text-gray-100 mb-5">
-        Settings for "
-        <Link href={`/${blog.slug}`}>
-          <a className="underline">{blog.name}</a>
-        </Link>
-        "
-      </h2>
-
+    <AppLayout
+      title={title}
+      mainTitle="Settings"
+      renderSidebar={() => <BlogSidebar />}
+    >
       <form className="max-w-xl" onSubmit={form.handleSubmit}>
         <div className="">
           <label className="label">Blog Name</label>

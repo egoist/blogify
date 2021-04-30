@@ -57,21 +57,22 @@ model Blog {
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
   title      String
   content    String
   excerpt    String
   slug       String
   draft      Boolean?
-  blog       Blog     @relation("blog_posts", fields: [blogId], references: [id])
-  blogId     Int      @map("blog_id")
-  likes      Like[]   @relation("post_likes")
-  likesCount Int      @default(0) @map("likes_count")
+  blog       Blog      @relation("blog_posts", fields: [blogId], references: [id])
+  blogId     Int       @map("blog_id")
+  likes      Like[]    @relation("post_likes")
+  likesCount Int       @default(0) @map("likes_count")
   cover      String?
-  coverAlt   String?  @map("cover_alt")
-  tags       Tag[]    @relation("post_tags")
+  coverAlt   String?   @map("cover_alt")
+  tags       Tag[]     @relation("post_tags")
+  deletedAt  DateTime?
 
   @@map("posts")
 }

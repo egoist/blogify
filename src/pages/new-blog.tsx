@@ -59,7 +59,7 @@ const NewBlog: React.FC<PageProps> = ({ hasBlog, user }) => {
         ...values,
       })
       if (data) {
-        router.push(`/blogs`)
+        router.push(`/dashboard/${data.createBlog.slug}`)
       } else if (error) {
         const field =
           error.graphQLErrors &&
@@ -82,7 +82,7 @@ const NewBlog: React.FC<PageProps> = ({ hasBlog, user }) => {
   })
 
   return (
-    <AppLayout user={user} title="New Blog">
+    <AppLayout title="New Blog">
       {!hasBlog && (
         <h2 className="mb-5 text-xl text-gray-50">
           👋≧◉ᴥ◉≦ Create Your First Blog!

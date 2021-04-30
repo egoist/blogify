@@ -8,6 +8,7 @@ import { BlogInfo } from '@/components/layouts/BlogLayout'
 type PageProps = {
   user: UserSession
   blog: BlogInfo
+  postId: number
 }
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (
@@ -29,18 +30,19 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
     return { notFound: true }
   }
 
+  const postId = parseInt(ctx.query.post as string, 10)
+
   return {
     props: {
       user,
       blog,
+      postId,
     },
   }
 }
 
-const NewPost: React.FC<PageProps> = ({ user, blog }) => {
-  return (
-    <PostEditor user={user} initialTitle={''} initialContent={''} blog={blog} />
-  )
+const EditPost: React.FC<PageProps> = ({ user, blog, postId }) => {
+  return <PostEditor user={user} blog={blog} postId={postId} />
 }
 
-export default NewPost
+export default EditPost

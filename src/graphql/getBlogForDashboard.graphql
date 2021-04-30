@@ -1,0 +1,6 @@
+query getBlogForDashboard($slug: String!) {
+  blog(slug: $slug) {
+    id
+    name
+  }
+}

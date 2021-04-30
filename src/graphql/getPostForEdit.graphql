@@ -1,0 +1,13 @@
+query getPostForEdit($id: Int!) {
+  post(id: $id) {
+    id
+    title
+    content
+    slug
+    cover
+    tags {
+      id
+      name
+    }
+  }
+}

@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (
   if (user) {
     return {
       redirect: {
-        destination: `/blogs`,
+        destination: `/dashboard`,
         permanent: false,
       },
     }

@@ -22,9 +22,9 @@ export const BaseLayout: React.FC<{
       <Head>
         <title>{title}</title>
       </Head>
-      <header className="py-5">
-        <div className="container h-14 flex items-center justify-between">
-          <h1 className="text-3xl text-accent">
+      <header className="px-5 border-b">
+        <div className="h-14 flex items-center justify-between">
+          <h1 className="text-accent">
             <Link href={headerTitleHref || '/'}>
               <a>{headerTitle}</a>
             </Link>
